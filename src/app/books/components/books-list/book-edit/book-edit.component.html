@@ -1,0 +1,42 @@
+<div class="book-edit-container" *ngIf="book">
+    <h4>
+        {{book.id ? 'Edit' : 'Add'}} book
+    </h4>
+    <form>
+      <div>
+        <label for="title">Title</label>
+        <input
+            id="title" name="title"
+            type="text"
+            placeholder="Book title"
+            [(ngModel)]="book.title">
+      </div>
+      <div>
+        <label for="author">Author</label>
+        <input
+            id="author" name="author"
+            type="text"
+            placeholder="Book author"
+            [(ngModel)]="book.author">
+      </div>
+      <div *ngIf="book.id">
+        <label for="clearRating">Rating</label>
+        <button
+            id="clearRating" name="clearRating"
+            (click)="clearRating()">
+          Clear rating
+        </button>
+      </div>
+      <p></p>
+      <button
+          type="submit"
+          (click)='saveBook()'>Save</button>
+      <button
+          type="cancel"
+          (click)='cancel()'>Cancel</button>
+      <span class="hint">Hint: Press ESC to cancel add/edit.</span>
+    </form>
+    <div class="error">
+      {{saveError}}
+    </div>
+</div>

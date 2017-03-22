@@ -1,0 +1,29 @@
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+tr {
+    border-bottom: 1px solid lightgrey;
+}
+
+th, td {
+    text-align: left;
+    padding: 10px 20px;
+}
+
+.high-rating {
+    font-weight: bold;
+}
+
+.low-rating {
+    color: grey;
+}
+
+.error {
+    color: red;
+}
+
+.hint {
+    color: grey;
+}

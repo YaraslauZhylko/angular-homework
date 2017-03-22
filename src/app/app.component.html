@@ -1,23 +1,5 @@
-<h1>
-  {{title}}
-</h1>
-<h3>
-    <span *ngFor="let word of description">
-        {{word}}
-    </span>
-</h3>
-<p>
-  by {{name.first}} {{name.last}}
-</p>
+<h1>{{title}}</h1>
+<h2>"{{subtitle}}"</h2>
+<h4>by {{name.first}} {{name.last}}</h4>
 
-<span>
-    Random items
-</span>
-<button (click)="toggleShowRandomItems()">
-    {{isShowRandomItems ? 'Hide' : 'Show'}}
-</button>
-<button (click)="getRandomItems()" [disabled]="!isShowRandomItems">
-    New
-</button>
-<app-reorderable-list *ngIf="isShowRandomItems" [items]="randomItems">
-</app-reorderable-list>
+<app-books-list></app-books-list>

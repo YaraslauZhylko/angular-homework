@@ -1,31 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { RandomItemsService } from './random-items.service';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent {
 
-  constructor(public randomItemsService:RandomItemsService) {}
-
-  title = "First Angular homework!";
-  description = ["My", "first", "test", "application", "in", "Angular", "2.x"];
+  title = "Second Angular Homework";
+  subtitle = "Public Library"
   name = {first: "Yaraslau", last: "Zhylko"};
 
-  isShowRandomItems = true;
-  randomItems:Array<string> = []
-
-  ngOnInit() {
-    this.getRandomItems();
-  }
-
-  getRandomItems() {
-      this.randomItems = this.randomItemsService.getItems(10);
-  }
-
-  toggleShowRandomItems() {
-      this.isShowRandomItems = !this.isShowRandomItems;
-  }
 }
