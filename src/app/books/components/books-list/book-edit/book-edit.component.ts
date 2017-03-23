@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
 
-import { Book } from './../../../models';
-import { BooksService } from './../../../services';
+import { Book, BooksService } from './../../../';
 
 @Component({
   selector: 'app-book-edit',
@@ -11,11 +10,13 @@ import { BooksService } from './../../../services';
 export class BookEditComponent implements OnChanges {
 
   /*@Input()*/book: Book;  // Do not use @Input. Will be set directly from parent component as part of @ViewChild demo
+  @Output() bookModified: EventEmitter<any>;  // Emits events signaling that book has been added or modified
   @Output() stopEdit: EventEmitter<any>;  // Emits events signaling that book add/edit process should be stopped/canceled
 
   saveError: string;
 
   constructor(private booksService: BooksService) {
+    this.bookModified = new EventEmitter<any>();
     this.stopEdit = new EventEmitter<any>();
   }
 
@@ -32,7 +33,10 @@ export class BookEditComponent implements OnChanges {
     } else {
       this.saveError = this.booksService.save(this.book);
     }
-    if (!this.saveError) this.stopEdit.emit();
+    if (!this.saveError) {
+      this.stopEdit.emit();
+      this.bookModified.emit();
+    }
   }
 
   clearRating() {

@@ -1,8 +1,7 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 
-import { Book } from './../../models';
-import { BooksService } from './../../services';
-import { BookEditComponent } from './'
+import { Book, BooksService } from './../../';
+import { BookEditComponent } from './book-edit/book-edit.component'
 
 @Component({
   selector: 'app-books-list',
@@ -18,7 +17,7 @@ export class BooksListComponent implements OnInit {
   constructor(private booksService: BooksService) { }
 
   ngOnInit() {
-    this.books = this.booksService.getAll();
+    this.updateData();
   }
 
   addBook(): void {
@@ -37,5 +36,15 @@ export class BooksListComponent implements OnInit {
     // Directly set 'book' property of the child 'app-book-edit' component via @ViewChild
     // instead of passing some local variable via @Input property
     this.bookEdit.book = book;
+  }
+
+  updateData(): void {
+    this.books =
+      this.booksService.getAll()
+      .sort((book1, book2) => {
+        if (book1.title > book2.title) return 1;
+        if (book1.title < book2.title) return -1;
+        return 0;
+      });
   }
 }

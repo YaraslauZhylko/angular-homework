@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 // import { HttpModule } from '@angular/http';
 
+import { SharedModule } from './shared';
 import { BooksModule } from './books';
 import { UsersModule } from './users';
 
@@ -16,6 +17,7 @@ import { AppComponent } from './app.component';
     BrowserModule,
     FormsModule,
     // HttpModule,  // Not used yet
+    SharedModule,
     BooksModule,
     UsersModule  // Just for demonstration. Not used yet.
   ],

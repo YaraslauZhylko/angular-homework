@@ -1,5 +1,9 @@
-<h1>{{title}}</h1>
-<h2>"{{subtitle}}"</h2>
-<h4>by {{name.first}} {{name.last}}</h4>
+<!-- Comment out ClickStylerDirective declaration in SharedModule's 'exports' to turn off styling mechanism -->
+<h1 app-click-styler="green">{{appData ? appData.title : 'Unknown application'}}</h1>
+<h2 app-click-styler="Fuchsia" *ngIf="appData">"{{appData.subTitle}}"</h2>
+<h4 app-click-styler>
+    by {{appData ? appData.author.firstName : 'Unknown'}} {{appData ? appData.author.lastName : 'author'}}
+    <small><em><u>[Click headers to change color]</u></em></small>
+</h4>
 
 <app-books-list></app-books-list>

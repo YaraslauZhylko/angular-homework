@@ -5,6 +5,7 @@
 
   <app-book-edit
       #bookEdit
+      (bookModified)="updateData()"
       (stopEdit)="onStopEdit()">
   </app-book-edit>
 
@@ -28,7 +29,8 @@
               'high-rating': book.averageRating() >= 4.5,
               'low-rating': book.averageRating() <= 2.5
             }"
-            (bookEdit)="onBookEdit($event)">
+            (bookEdit)="onBookEdit($event)"
+            (bookModified)="updateData()">
         </tr>
     </tbody>
   </table>

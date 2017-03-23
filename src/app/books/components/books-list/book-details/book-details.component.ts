@@ -1,7 +1,6 @@
 import { Component, Input, Output, HostBinding, HostListener, EventEmitter } from '@angular/core';
 
-import { Book } from './../../../models';
-import { BooksService } from './../../../services';
+import { Book, BooksService } from './../../../';
 
 @Component({
   selector: '[app-book-details]',
@@ -11,7 +10,8 @@ import { BooksService } from './../../../services';
 export class BookDetailsComponent {
 
   @Input() book: Book;
-  @Output() bookEdit: EventEmitter<Book>;
+  @Output() bookEdit: EventEmitter<Book>;  // Emits events signaling that book has to be editted
+  @Output() bookModified: EventEmitter<any>;  // Emits events signaling that book has been added or modified
   @HostBinding('style.cursor') cursor = 'pointer';
   @HostBinding('style.background-color') backgroundColor: string;
 
@@ -24,10 +24,12 @@ export class BookDetailsComponent {
 
   constructor(private booksService: BooksService) {
     this.bookEdit = new EventEmitter<Book>();
+    this.bookModified = new EventEmitter<any>();
   }
 
-  rateBook(rate:number): void {
+  rateBook(rate: number): void {
     this.booksService.rate(this.book, rate);  // Add another rating
+    this.bookModified.emit();
   }
 
   editBook(): void {
@@ -37,5 +39,6 @@ export class BookDetailsComponent {
 
   deleteBook(): void {
     this.booksService.delete(this.book);
+    this.bookModified.emit();
   }
 }

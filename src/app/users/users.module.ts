@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { User } from './models';
-import { UsersService } from './services';
+import { User, UsersService } from './';
 
 @NgModule({
   imports: [
