@@ -1,16 +1,34 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
-import { User, UsersService } from './';
+import {
+  User,
+  UsersService,
+  UserResolveGuard,
+  UsersListComponent,
+  UserEntryComponent,
+  UserEditComponent
+} from '.';
+
+import { CanDeactivateGuard } from './../guards';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    FormsModule,
+    RouterModule
   ],
-  declarations: [],
+  declarations: [
+    UsersListComponent,
+    UserEntryComponent,
+    UserEditComponent
+  ],
   providers: [
-    UsersService
-  ],
-  exports: []
+    UsersService,
+    UserResolveGuard,
+    CanDeactivateGuard
+  ]
 })
 export class UsersModule { }

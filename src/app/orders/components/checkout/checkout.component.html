@@ -1,0 +1,24 @@
+<h4>Checkout Information</h4>
+<form #orderForm="ngForm" *ngIf="orderData" (ngSubmit)="createOrder()">
+  <div>
+    <label for="clientName">Name</label>
+    <input
+        id="clientName" name="clientName"
+        type="text" readonly
+        value="{{orderData.client.fullName()}}">
+  </div>
+  <div>
+    <label for="address">Address</label>
+    <input
+        id="address" name="address"
+        type="text" required
+        placeholder="Shipment address"
+        [(ngModel)]="orderData.order.address">
+  </div>
+  <p></p>
+  <button type="submit" [disabled]="!orderForm.form.valid">Submit order</button>
+  <button type="button" (click)="cancel()">Cancel</button>
+</form>
+<div class="error">
+  {{saveError}}
+</div>

@@ -1,0 +1,21 @@
+<h3 *ngIf="submittedOrderId | async">
+  Order #{{submittedOrderId | async}} successfully created!
+</h3>
+<h4>Your cart</h4>
+<app-order-items-list
+    *ngIf="cartItems.length"
+    [orderItems]="cartItems"
+    [books]="books"
+    [isCart]="true"
+    (increaseCount)="increaseBookCount($event)"
+    (decreaseCount)="decreaseBookCount($event)"
+    (remove)="removeBook($event)">
+</app-order-items-list>
+<p *ngIf="!cartItems.length">
+    Your cart is empty!
+</p>
+<p>
+  <button [disabled]="!totalValidItems || cartItems.length !== books.length" (click)="checkout()">Proceed to checkout</button>
+  <button [disabled]="!cartItems.length" (click)="update()">Update</button>
+  <button [disabled]="!cartItems.length" (click)="empty()">Clear cart</button>
+</p>

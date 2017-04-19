@@ -1,0 +1,12 @@
+<h4>Order: "{{orderData.order.id}}"</h4>
+<p [ngClass]="{'critical': missingClient}">Client: {{orderData.client.fullName()}}</p>
+<p>Address: {{orderData.order.address}}</p>
+<app-order-items-list
+    [orderItems]="orderData.order.items"
+    [books]="orderData.books">
+</app-order-items-list>
+<p>
+  <button [disabled]="missingClient" (click)="completeOrder()">Complete order</button>
+  <button (click)="back()">&lt; Back to list</button>
+  <button class="critical" (click)="deleteOrder()">DELETE</button>
+</p>

@@ -1,0 +1,24 @@
+<table>
+  <thead>
+    <tr>
+      <th>Client</th>
+      <th>Items Count</th>
+      <th>Total Price</th>
+      <th>Comments</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr
+          app-order-entry
+          *ngFor="let order of ordersData.orders"
+          [order]="order"
+          [clients]="ordersData.clients"
+          [books]="ordersData.books">
+      </tr>
+      <tr *ngIf="!ordersData.orders.length">
+        <td colspan="4">
+          <em>No active orders</em>
+        </td>
+      </tr>
+  </tbody>
+</table>

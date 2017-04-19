@@ -1,41 +1,29 @@
- <!-- Emulate child component's method call on hitting ESC key instead of just calling parent's onStopEdit() -->
-<div (keyup.escape)="bookEdit.cancel()">
+<button
+    *ngIf="isAdminFeatureArea"
+    (click)="addBook()">
+  Add book
+</button>
 
-  <button (click)="addBook()">Add new book</button>
-
-  <app-book-edit
-      #bookEdit
-      (bookModified)="updateData()"
-      (stopEdit)="onStopEdit()">
-  </app-book-edit>
-
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>Rating</th>
-        <th>Rate this Book</th>
-        <th>Actions</th>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Rating</th>
+      <th>Price</th>
+      <th *ngIf="isAdminFeatureArea">Available</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr
+          app-book-entry
+          *ngFor="let book of books"
+          [book]="book"
+          [modifiedBook]="modifiedBook"
+          [isAdminFeatureArea]="isAdminFeatureArea">
       </tr>
-    </thead>
-    <tbody>
-        <tr
-            app-book-details
-            *ngFor="let book of books"
-            [book]="book"
-            [ngClass]="{
-              'high-rating': book.averageRating() >= 4.5,
-              'low-rating': book.averageRating() <= 2.5
-            }"
-            (bookEdit)="onBookEdit($event)"
-            (bookModified)="updateData()">
-        </tr>
-    </tbody>
-  </table>
+  </tbody>
+</table>
 
-  <p class="hint">* Books with rating of 4.5 and higher are marked in bold.</p>
-  <p class="hint">* Books with rating of 2.5 and lower are greyed out.</p>
-
-</div>
+<p *ngIf="!this.isAdminFeatureArea" class="hint">* Books with rating of 4.5 and higher are marked in bold.</p>
+<p *ngIf="!this.isAdminFeatureArea" class="hint">* Books with rating of 2.5 and lower are greyed out.</p>

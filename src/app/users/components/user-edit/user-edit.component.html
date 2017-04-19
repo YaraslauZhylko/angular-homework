@@ -1,0 +1,44 @@
+<form #userForm="ngForm" (ngSubmit)="saveUser()">
+  <div *ngIf="user.id">
+    <label for="id">ID</label>
+    <input
+        id="id" name="id"
+        type="text"
+        placeholder="User id"
+        [ngModel]="user.id"
+        disabled>
+  </div>
+  <div>
+    <label for="firstName">First Name</label>
+    <input
+        id="firstName" name="firstName"
+        type="text" required
+        placeholder="User's first name"
+        [(ngModel)]="user.firstName">
+  </div>
+  <div>
+    <label for="lastName">Last Name</label>
+    <input
+        id="lastName" name="lastName"
+        type="text" required
+        placeholder="User's last name"
+        [(ngModel)]="user.lastName">
+  </div>
+  <div>
+    <label for="role">Role</label>
+    <select
+        id="role" name="role"
+        required
+        [(ngModel)]="user.isAdmin">
+      <option [ngValue]="false">Client</option>
+      <option [ngValue]="true">Administrator</option>
+    </select>
+  </div>
+  <p></p>
+  <button type="submit" [disabled]="!userForm.form.valid">{{oldUser ? 'Save' : 'Add'}}</button>
+  <button type="button" (click)="cancel()">Cancel</button>
+  <button type="button" class="critical" *ngIf="oldUser" (click)="deleteUser()">DELETE</button>
+</form>
+<div class="error">
+  {{saveError}}
+</div>

@@ -3,25 +3,27 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class StorageService {
 
-  set(id: string, data: any): void {
-    localStorage.setItem(id, JSON.stringify(data));
+  private getId(entityType: string, id: string): string {
+    return entityType + '_' + id;
   }
 
-  get(id: string): any {
-    let data = localStorage.getItem(id);
+  set(entityType: string, id: string, data: any): void {
+    localStorage.setItem(this.getId(entityType, id), JSON.stringify(data));
+  }
+
+  get(entityType: string, id: string): any {
+    let data = localStorage.getItem(this.getId(entityType, id));
     return data ? JSON.parse(data) : data;
   }
 
-  getAll(): Array<any> {
-    var allData = [];
-    for(var i =0; i < localStorage.length; i++){
-      allData.push(this.get(localStorage.key(i)));
-    }
-    return allData;
+  getAll(entityType: string): Array<any> {
+    return Object.keys(localStorage)
+      .filter(key => key.startsWith(this.getId(entityType, '')))
+      .map(key => localStorage.getItem(key))
+      .map(data => data ? JSON.parse(data) : data);
   }
 
-  remove(id: string): void {
-    localStorage.removeItem(id);
+  remove(entityType: string, id: string): void {
+    localStorage.removeItem(this.getId(entityType, id));
   }
-
 }

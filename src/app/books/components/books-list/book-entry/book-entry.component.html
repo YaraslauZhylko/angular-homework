@@ -1,0 +1,10 @@
+<td>
+    "{{book.title}}"
+    <span *ngIf="modifiedBook && modifiedBook.id === book.id" class="warning">
+        [{{modifiedBook.isNew ? 'new' : 'modified'}}]
+    </span>
+</td>
+<td>{{book.author}}</td>
+<td>{{book.averageRating()}}</td>
+<td>{{book.price}} BYN</td>
+<td *ngIf="isAdminFeatureArea" [ngClass]="{'critical': book.count <= 0}">{{book.count}}</td>

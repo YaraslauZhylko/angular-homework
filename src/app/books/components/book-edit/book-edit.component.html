@@ -1,0 +1,62 @@
+<form #bookForm="ngForm" (ngSubmit)="saveBook()">
+  <div *ngIf="book.id">
+    <label for="id">ID</label>
+    <input
+        id="id" name="id"
+        type="text"
+        placeholder="Book id"
+        [ngModel]="book.id"
+        disabled>
+  </div>
+  <div>
+    <label for="title">Title</label>
+    <input
+        id="title" name="title"
+        type="text" required
+        placeholder="Book title"
+        [(ngModel)]="book.title">
+  </div>
+  <div>
+    <label for="author">Author</label>
+    <input
+        id="author" name="author"
+        type="text" required
+        placeholder="Book author"
+        [(ngModel)]="book.author">
+  </div>
+  <div *ngIf="book.id">
+    <label for="rating">Rating</label>
+    <input
+        id="rating" name="rating"
+        type="text"
+        placeholder="Book rating"
+        value="{{book.averageRating()}}"
+        readonly>
+    <button type="button" (click)="clearRating()">Clear rating</button>
+  </div>
+  <div>
+    <label for="price">Price</label>
+    <input
+        id="price" name="price"
+        type="number" required
+        min="0.01" step="0.01"
+        placeholder="Book price"
+        [(ngModel)]="book.price">
+  </div>
+  <div>
+    <label for="count">Books available</label>
+    <input
+        id="count" name="count"
+        type="number" required
+        min="0" step="1"
+        placeholder="Number of books in store"
+        [(ngModel)]="book.count">
+  </div>
+  <p></p>
+  <button type="submit" [disabled]="!bookForm.form.valid">{{oldBook ? 'Save' : 'Add'}}</button>
+  <button type="button" (click)="cancel()">Cancel</button>
+  <button type="button" class="critical" *ngIf="oldBook" (click)="deleteBook()">DELETE</button>
+</form>
+<div class="error">
+  {{saveError}}
+</div>

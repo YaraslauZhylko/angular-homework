@@ -20,17 +20,15 @@ export class ClickStylerDirective implements OnInit {
     'violet'
   ];
 
+  @Input('app-click-styler') initialColor: string;
   private hostElement: HTMLElement;
   private currentColorIdx: number = 0;
-  @Input('app-click-styler') initialColor: string;
 
   constructor(private el: ElementRef) {
-    // alert('CREATED');  // DEBUG
     this.hostElement = el.nativeElement;
   }
 
   ngOnInit() {
-    // alert('INIT');  // DEBUG
     if (this.initialColor) {
       this.currentColorIdx = this.colors.indexOf(this.initialColor.trim().toLowerCase());
       if (this.currentColorIdx < 0) {
@@ -42,7 +40,6 @@ export class ClickStylerDirective implements OnInit {
   }
 
   @HostListener('click', ['$event']) onClick(event) {
-    // alert('CLICKED');  // DEBUG
     this.currentColorIdx++;
     if (this.currentColorIdx >= this.colors.length) this.currentColorIdx = 0;
     this.setColor();
@@ -51,5 +48,4 @@ export class ClickStylerDirective implements OnInit {
   setColor() {
     this.hostElement.style.color = this.colors[this.currentColorIdx];
   }
-
 }

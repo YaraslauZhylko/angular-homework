@@ -1,0 +1,18 @@
+<h4>"{{book.title}}"</h4>
+<p>Author: {{book.author}}</p>
+<p>
+  Rating: {{book.averageRating()}}
+  <button
+      *ngFor="let rate of [1,2,3,4,5]"
+      (click)="rateBook(rate)"
+      [ngClass]="{'active': rate === userRating}"
+      [disabled]="userRating && rate !== userRating">
+    {{rate}}
+  </button>
+</p>
+<p>Price: {{book.price}} BYN</p>
+<p>Left in store: {{book.count}}</p>
+<p>
+  <button (click)="back()">&lt; Back to list</button>
+  <button [disabled]="!book.count" (click)="addToCart()">Add to cart</button>
+</p>

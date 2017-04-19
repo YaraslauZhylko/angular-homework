@@ -1,0 +1,19 @@
+<td *ngIf="book">"{{book.title}}"</td>
+<td *ngIf="!book">Unknown book</td>
+
+<td *ngIf="book">{{book.author}}</td>
+<td *ngIf="!book">n/a</td>
+
+<td *ngIf="book">{{book.price}} BYN</td>
+<td *ngIf="!book">n/a</td>
+
+<td>{{orderItem.count}}</td>
+
+<td *ngIf="book">{{book.price * orderItem.count}} BYN</td>
+<td *ngIf="!book">n/a</td>
+
+<td *ngIf="isCart">
+  <button [disabled]="!book" (click)="increaseCount.emit(orderItem.bookId)">+</button>
+  <button [disabled]="!book || orderItem.count <= 0" (click)="decreaseCount.emit(orderItem.bookId)">-</button>
+  <button (click)="remove.emit(orderItem.bookId)">X</button>
+</td>

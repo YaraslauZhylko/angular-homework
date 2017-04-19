@@ -1,5 +1,5 @@
 export const AppData = {
-  title: "Third Angular Homework",
-  subTitle: "Public Library (with shifty services)",
+  title: "Book Store",
+  subTitle: "Fourth Angular Homework",
   author: { firstName: "Yaraslau", lastName: "Zhylko"}
 }

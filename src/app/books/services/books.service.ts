@@ -1,143 +1,91 @@
-import { Injectable, Inject, Optional } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 
-import { Book } from './../';
+import { Book } from './..';
 import { UNIQUE_ID_8, StorageService } from './../../shared';
 
 @Injectable()
 export class BooksService {
 
+  entityType: string = 'book';
+
   constructor(
-    // Comment out UNIQUE_ID_8 declaration in SharedModule's 'providers' to see this service use INTEGER IDs
-    @Inject(UNIQUE_ID_8) @Optional() private uniqueId: any,
-    // Comment out StorageService declaration in SharedModule's 'providers' to see this service use in-memory storage
-    @Optional() private storage: StorageService
+    @Inject(UNIQUE_ID_8) private uniqueId: any,
+    private storage: StorageService
   ) {
     this.preSeedIfRequired();
-    this.setInitialSequentialIdIfRequired();
-  }
-
-  // ID-related methods:
-
-  private nextSequentialId: number = 1;
-
-  private setInitialSequentialIdIfRequired(): void {
-    if (this.storage && !this.uniqueId) {
-      for (let book of this.getAll()) {
-        let integerId = parseInt(book.id);
-        if (!isNaN(integerId)) {
-          this.nextSequentialId = Math.max(this.nextSequentialId, integerId + 1);
-        }
-      }
-    }
-  }
-
-  private sequentialId(): string {
-    return String(this.nextSequentialId++);
-  }
-
-  private getId(): string {
-    return this.uniqueId ? this.uniqueId() : this.sequentialId();
   }
 
   // Storage-related methods:
 
-  private fallbackStorage: Array<Book> = [];
-
   private preSeedIfRequired(): void {
 
-    let alreadyPopulated =
-      this.storage
-        ? this.storage.getAll().length > 0
-        : this.fallbackStorage.length > 0;
+    let alreadyPopulated = this.storage.getAll(this.entityType).length > 0;
 
     if (!alreadyPopulated) {
-      if (this.storage) alert("Initially pre-seeding localStorage with data...");
-      this.save(new Book(null, "Жалейка", "Янка Купала", [4, 3, 4, 5]));
-      this.save(new Book(null, "Новая зямля", "Якуб Колас"));
-      this.save(new Book(null, "Вянок", "Максім Багдановіч", [4, 5, 4]));
-      this.save(new Book(null, "Ладдзя роспачы", "Уладзімір Караткевіч", [5, 4, 5]));
-      this.save(new Book(null, "Неруш", "Рыгор Барадулін"));
-      this.save(new Book(null, "Знак Бяды", "Васіль Быкаў", [5, 5]));
-      this.save(new Book(null, "Першае чытаньне для дзетак беларусаў", "Цётка", [4, 3, 4, 5]));
-      this.save(new Book(null, "Песьня пра зубра", "Мікола Гусоўскі", [4, 3, 5, 5]));
-      this.save(new Book(null, "Пінская шляхта", "Вінцэнт Дунін-Марцінкевіч"));
-      this.save(new Book(null, "Палескія рабінзоны", "Янка Маўр", [4, 5]));
+      if (this.storage) alert("Initially pre-seeding localStorage with book data...");
+      this.save(new Book(null, "Жалейка", "Янка Купала", 10, 1, [4, 3, 4, 5]));
+      this.save(new Book(null, "Новая зямля", "Якуб Колас", 12, 3));
+      this.save(new Book(null, "Вянок", "Максім Багдановіч", 14.2, 5,  [4, 5, 4]));
+      this.save(new Book(null, "Ладдзя роспачы", "Уладзімір Караткевіч", 26.4, 2, [5, 4, 5]));
+      this.save(new Book(null, "Неруш", "Рыгор Барадулін", 5.56, 2));
+      this.save(new Book(null, "Знак Бяды", "Васіль Быкаў", 23.99, 5, [5, 5]));
+      this.save(new Book(null, "Першае чытаньне для дзетак беларусаў", "Цётка", 22.1, 4, [4, 3, 4, 5]));
+      this.save(new Book(null, "Песьня пра зубра", "Мікола Гусоўскі", 15.6, 2, [4, 3, 5, 5]));
+      this.save(new Book(null, "Пінская шляхта", "Вінцэнт Дунін-Марцінкевіч", 23.5, 6));
+      this.save(new Book(null, "Палескія рабінзоны", "Янка Маўр", 13, 1, [4, 5]));
     }
   }
 
   // PUBLIC METHODS:
 
-  get(id: string): Book {
-    if (this.storage) {
-      alert('STORAGE GET');
-      return Book.fromJSON(this.storage.get(id));
+  getAll(ids?: Array<string>): Promise<Array<Book>> {
+    return Promise.resolve(
+      this.storage.getAll(this.entityType)
+        .filter(book => !ids || ids.indexOf(book.id) >= 0)
+        .map(book => Book.fromJSON(book)));
+  }
+
+  get(id: string): Promise<Book> {
+    let book = this.storage.get(this.entityType, id);
+    if (book) return Promise.resolve(Book.fromJSON(book))
+    else return Promise.reject("Book not found.");
+  }
+
+  rate(id: string, rate: number): Promise<Book> {
+    return this.get(id)
+      .then(book => {
+        book.ratings.push(rate);
+        return book;
+      })
+      .then(book => { this.save(book); return book; })
+  }
+
+  unrate(id: string, rate: number): Promise<Book> {
+    return this.get(id)
+      .then(book => {
+        let lastIdx = book.ratings.lastIndexOf(rate);
+        if (lastIdx >= 0) book.ratings.splice(lastIdx, 1);
+        return book;
+      })
+      .then(book => { this.save(book); return book; })
+  }
+
+  save(book: Book): Promise<any> {
+
+    let saveBook = (book) => Promise.resolve(this.storage.set(this.entityType, book.id, book));
+    let bookNotFound = () => Promise.reject("This book has already been deleted.");
+
+    if (book.id) {
+      return this.get(book.id)
+        .then(() => saveBook(book))
+        .catch(() => bookNotFound());
     } else {
-      alert('FALLBACK GET');
-      for (let book of this.fallbackStorage) {
-        if (book.id === id) return book;
-      }
+      book.id = this.uniqueId();
+      return saveBook(book);
     }
   }
 
-  getAll(): Array<Book> {
-    if (this.storage) {
-      // alert('STORAGE GETALL');  // DEBUG
-      let bookArray = [];
-      for (var bookData of this.storage.getAll()) {
-        let book = Book.fromJSON(bookData);
-        if (book) bookArray.push(book);
-      }
-      return bookArray;
-    } else {
-      // alert('FALLBACK GETALL');  // DEBUG
-      return this.fallbackStorage;
-    }
+  delete(id: string): Promise<any> {
+    return Promise.resolve(this.storage.remove(this.entityType, id));
   }
-
-  rate(book: Book, rate: number): void {
-    book.ratings.push(rate);
-    this.save(book);
-  }
-
-  save(book: Book): string {
-    if (this.storage) {
-      // alert('STORAGE SAVE');  // DEBUG
-      if (book.id) {
-        if (!this.storage.get(book.id)) {
-          return "This book has already been deleted. Please cancel your edit."
-        }
-      } else {
-        book.id = this.getId();
-      }
-      this.storage.set(book.id, book);
-
-    } else {
-      // alert('FALLBACK SAVE');  // DEBUG
-      if (book.id) {
-        for (let idx = 0; idx < this.fallbackStorage.length; idx++) {
-          if (this.fallbackStorage[idx].id === book.id) {
-            this.fallbackStorage[idx] = book;
-            return;
-          }
-        }
-        return "This book has already been deleted. Please cancel your edit."
-      } else {
-        book.id = this.getId();
-        this.fallbackStorage.push(book);
-      }
-
-    }
-  }
-
-  delete(book: Book): void {
-    if (this.storage) {
-      // alert('STORAGE DELETE');  // DEBUG
-      this.storage.remove(book.id);
-    } else {
-      // alert('FALLBACK DELETE');  // DEBUG
-      let bookIndex = this.fallbackStorage.indexOf(book);
-      if (bookIndex >= 0) this.fallbackStorage.splice(bookIndex, 1);
-    }
-  }
-
 }

@@ -1,27 +1,48 @@
 # AngularHomework
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.0.0-rc.1.
+## Комментарии к домашнему заданию
 
-## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- При удалении ввсех пользователей или всех книг они демо-данные будут сгенерены заново. Заказы автоматически не генерируются.
+- Для доступ к админке требует залогиниться администратором. Клиентов туда не пустят.
+- Для оформления заказа также необходимо залогиниться. Но тут уже подойдёт любой тип пользователей.
 
-## Code scaffolding
+## Вопросы по домашнему заданию
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive/pipe/service/class/module`.
+### 1. Внутренний роутинг приложения работает нормально. Но если попытаться ввести URL вручную - начинаются проблемы.
 
-## Build
+URL-ы первого уровня (`books`, `cart`, `admin`, `login`, `about`) срабатывают нормально. При попытке ввода неправильго URL'а - попадаешь на Page Not Fund...
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+Но URL'ы второго и более уровня стабильно выдают ошибки: происходит попытка загрузить базовые файлы (`main.bundle.js`, `vendor.bundle.js`, `polyfills.bundle.js` и т.д.) начиная с URL'а первого уровня, а не из корня.
+Судя по дебагу - даже в Guard'ы не попадают...
 
-## Running unit tests
+При попытке заменить `/` на `#` начинают задваиваться URL's: `localhost:4200/#/books/id => localhost:4200/#/books/#/books/id`.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Возможно, этот как-то связано с тем, что роутинг прописан в двух модулях: store и admin.
+Но я так и не смог разобраться...
 
-## Running end-to-end tests
+### 2. В ui-router'е для AngularJS можно было выстраивать зависящие друго от друга resolve'ы в цепочки.
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-Before running the tests make sure you are serving the app via `ng serve`.
+```javascript
+resolve1: ['SomeService', function(SomeService) {
+    return SomeService.getAll();
+}],
+resolve2: ['SomeOtherService', 'resolve1', function(SomeOtherService, resolve1) {
+    return SomeOtherService.get(resolve1.id);
+}],
+resolve3: ['resolve2', function(resolve2) {
+    return resolve2.calculateSomething();
+}]
+```
 
-## Further help
+А можно ли такое же сделать в Angular 2?
+Я как-то не нашёл...
+Пришлось всё делать одним resolve'ом и возвращать сборный объект вроде `OrdersData`, `OrderData`...
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### 3.При первом запуске `ng serve` стабильно выдаётся ошибка про `UniqueId` factory.
+Если пересохранить любой файл, чтобы CLI передилдил прогу, то ошибка пропадает.
+Так и не понял, что он от меня хочет. :)
+
+### 4. Ошибки далеко не всегда информативные.
+В stacktrace только `main.bundle.js`, `vendor.bundle.js`, `polyfills.bundle.js` и т.д.
+
+Можно ли как-то увеличить verbosity?

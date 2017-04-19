@@ -1,0 +1,20 @@
+<button (click)="addUser()">
+  Add user
+</button>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Role</th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr
+          app-user-entry
+          *ngFor="let user of users"
+          [user]="user"
+          [modifiedUser]="modifiedUser">
+      </tr>
+  </tbody>
+</table>

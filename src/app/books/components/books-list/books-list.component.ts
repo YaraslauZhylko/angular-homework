@@ -1,50 +1,57 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
-import { Book, BooksService } from './../../';
-import { BookEditComponent } from './book-edit/book-edit.component'
+import { Book, BooksService } from './../..';
 
 @Component({
-  selector: 'app-books-list',
   templateUrl: './books-list.component.html',
-  styleUrls: ['./books-list.component.css']
+  styleUrls: [
+    './../../../shared/css/shared.css',
+    './book-entry/book-entry.component.css'
+  ]
 })
-export class BooksListComponent implements OnInit {
+export class BooksListComponent implements OnInit, OnDestroy {
 
   books: Array<Book>;
+  private isAdminFeatureArea: Boolean = false;
+  private modifiedBook: Object = {};
+  private sub: Subscription;
 
-  @ViewChild('bookEdit') bookEdit: BookEditComponent;
-
-  constructor(private booksService: BooksService) { }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private booksService: BooksService
+  ) { }
 
   ngOnInit() {
-    this.updateData();
+    this.sub = this.route.params
+      .subscribe(params => {
+          this.modifiedBook['id'] = String(params['id']);
+          this.modifiedBook['isNew'] = params['isNew'];
+      });
+    this.route.parent.parent.data
+      .forEach((data: { isAdminFeatureArea: Boolean }) => {
+        this.isAdminFeatureArea = !!data.isAdminFeatureArea
+      });
+    this.booksService.getAll()
+      .then(books => books.filter(book => this.isAdminFeatureArea || book.count > 0))
+      .then(books => {
+        this.books = books
+          .sort((book1, book2) => {
+            if (book1.title > book2.title) return 1;
+            if (book1.title < book2.title) return -1;
+            return 0;
+          });
+        })
+      .catch((error) => alert(error));
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   addBook(): void {
-    this.setBookToBeModified(new Book(null, "", ""));  // Create new book
-  }
-
-  onBookEdit(book: Book): void {
-    this.setBookToBeModified(book);  // Modify book object passed via event
-  }
-
-  onStopEdit(): void {
-    this.setBookToBeModified(undefined);  // Just "undefine" the book to hide 'app-book-edit' element
-  }
-
-  setBookToBeModified(book: Book): void {
-    // Directly set 'book' property of the child 'app-book-edit' component via @ViewChild
-    // instead of passing some local variable via @Input property
-    this.bookEdit.book = book;
-  }
-
-  updateData(): void {
-    this.books =
-      this.booksService.getAll()
-      .sort((book1, book2) => {
-        if (book1.title > book2.title) return 1;
-        if (book1.title < book2.title) return -1;
-        return 0;
-      });
+    this.router.navigate(['add'], {relativeTo: this.route});
   }
 }

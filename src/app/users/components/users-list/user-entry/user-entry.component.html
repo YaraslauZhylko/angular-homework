@@ -1,0 +1,10 @@
+<td>
+    {{user.fullName()}}
+    <span *ngIf="modifiedUser && modifiedUser.id === user.id" class="warning">
+        [{{modifiedUser.isNew ? 'new' : 'modified'}}]
+    </span>
+</td>
+<td>
+    <span *ngIf="user.isAdmin"><strong>Administrator</strong></span>
+    <span *ngIf="!user.isAdmin">Client</span>
+</td>

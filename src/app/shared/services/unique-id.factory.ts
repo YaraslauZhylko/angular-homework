@@ -10,6 +10,5 @@ export function UniqueID(length: number) {
       }
       return id;
     };
-
   };
 }

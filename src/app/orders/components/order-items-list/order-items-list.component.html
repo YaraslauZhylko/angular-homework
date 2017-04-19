@@ -1,0 +1,29 @@
+<p>Items:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Price</th>
+      <th>Number of Books</th>
+      <th>Total Price</th>
+      <th *ngIf="isCart"></th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr
+          app-order-item-entry
+          *ngFor="let orderItem of orderItems"
+          [orderItem]="orderItem"
+          [books]="books"
+          [isCart]="isCart"
+          (increaseCount)="increaseCount.emit($event)"
+          (decreaseCount)="decreaseCount.emit($event)"
+          (remove)="remove.emit($event)">
+      </tr>
+  </tbody>
+</table>
+<p>Total price: {{totalPrice}} BYN</p>
+<p *ngIf="missingItems" class="critical">
+  Some books are no longer available! Might have been deleted from DB?
+</p>

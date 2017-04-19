@@ -1,9 +1,9 @@
 <!-- Comment out ClickStylerDirective declaration in SharedModule's 'exports' to turn off styling mechanism -->
 <h1 app-click-styler="green">{{appData ? appData.title : 'Unknown application'}}</h1>
-<h2 app-click-styler="Fuchsia" *ngIf="appData">"{{appData.subTitle}}"</h2>
-<h4 app-click-styler>
-    by {{appData ? appData.author.firstName : 'Unknown'}} {{appData ? appData.author.lastName : 'author'}}
-    <small><em><u>[Click headers to change color]</u></em></small>
-</h4>
-
-<app-books-list></app-books-list>
+<button [routerLink]="['books']" routerLinkActive="active">Store</button>
+<button [routerLink]="['cart']" routerLinkActive="active">Cart: {{cartItemsCount}}</button>
+<button [routerLink]="['admin']" routerLinkActive="active">Admin</button>
+<button [routerLink]="['login']" routerLinkActive="active">Login</button>
+<button [routerLink]="['about']" routerLinkActive="active">About</button>
+<hr>
+<router-outlet></router-outlet>

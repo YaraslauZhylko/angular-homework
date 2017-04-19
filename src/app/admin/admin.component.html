@@ -1,0 +1,21 @@
+<h3>Admin</h3>
+<button
+    [routerLink]="['orders']"
+    routerLinkActive="active">
+    <!-- preserveQueryParams -->
+  Manage Orders
+</button>
+<button
+    [routerLink]="['books']"
+    routerLinkActive="active">
+    <!-- preserveQueryParams -->
+  Manage Books
+</button>
+<button
+    [routerLink]="['users']"
+    routerLinkActive="active">
+    <!-- preserveQueryParams -->
+  Manage Users
+</button>
+<hr>
+<router-outlet></router-outlet>
