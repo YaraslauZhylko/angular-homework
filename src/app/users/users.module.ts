@@ -9,7 +9,8 @@ import {
   UserResolveGuard,
   UsersListComponent,
   UserEntryComponent,
-  UserEditComponent
+  UserEditComponent,
+  FullNamePipe
 } from '.';
 
 import { CanDeactivateGuard } from './../guards';
@@ -23,12 +24,16 @@ import { CanDeactivateGuard } from './../guards';
   declarations: [
     UsersListComponent,
     UserEntryComponent,
-    UserEditComponent
+    UserEditComponent,
+    FullNamePipe
   ],
   providers: [
     UsersService,
     UserResolveGuard,
     CanDeactivateGuard
+  ],
+  exports: [
+    FullNamePipe
   ]
 })
 export class UsersModule { }

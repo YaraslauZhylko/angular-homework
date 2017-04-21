@@ -1,0 +1,11 @@
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'title'
+})
+export class TitlePipe implements PipeTransform {
+
+  transform(bookTitle: string): string {
+    return `"${bookTitle}"`;
+  }
+}

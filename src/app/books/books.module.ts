@@ -12,7 +12,10 @@ import {
   BooksListComponent,
   BookEntryComponent,
   BookDetailsComponent,
-  BookEditComponent
+  BookEditComponent,
+  AvailableBooksPipe,
+  AverageRatingPipe,
+  TitlePipe
 } from '.';
 
 @NgModule({
@@ -25,12 +28,18 @@ import {
     BooksListComponent,
     BookEntryComponent,
     BookDetailsComponent,
-    BookEditComponent
+    BookEditComponent,
+    AvailableBooksPipe,
+    AverageRatingPipe,
+    TitlePipe
   ],
   providers: [
     BooksService,
     CanDeactivateGuard,
-    BookResolveGuard
+    BookResolveGuard,
+  ],
+  exports: [
+    TitlePipe
   ]
 })
 export class BooksModule { }

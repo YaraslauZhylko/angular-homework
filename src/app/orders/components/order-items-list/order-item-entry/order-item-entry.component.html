@@ -1,15 +1,15 @@
-<td *ngIf="book">"{{book.title}}"</td>
+<td *ngIf="book">{{book.title | title}}</td>
 <td *ngIf="!book">Unknown book</td>
 
 <td *ngIf="book">{{book.author}}</td>
 <td *ngIf="!book">n/a</td>
 
-<td *ngIf="book">{{book.price}} BYN</td>
+<td *ngIf="book">{{book.price | currency:'BYN':false:'1.2-2'}}</td>
 <td *ngIf="!book">n/a</td>
 
 <td>{{orderItem.count}}</td>
 
-<td *ngIf="book">{{book.price * orderItem.count}} BYN</td>
+<td *ngIf="book">{{(book.price * orderItem.count) | currency:'BYN':false:'1.2-2'}}</td>
 <td *ngIf="!book">n/a</td>
 
 <td *ngIf="isCart">

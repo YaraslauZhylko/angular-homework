@@ -1,5 +1,5 @@
-import { Component, Inject, Optional, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, Inject, Optional, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 import { APP_DATA } from './shared';
 import { CartService } from './orders';
@@ -9,10 +9,9 @@ import { CartService } from './orders';
   templateUrl: './app.component.html',
   styleUrls: ['./shared/css/shared.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
 
-  private sub: Subscription;
-  private cartItemsCount: number = 0;
+  private cartItemsCount: Observable<number>;
 
   // appData "optionality" is handled in template projection.
   // Comment out APP_DATA declaration in SharedModule's 'providers' to see the use of default values
@@ -23,11 +22,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.sub = this.cartService.itemsCount
-      .subscribe(count => this.cartItemsCount = count);
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.cartItemsCount = this.cartService.itemsCount;
   }
 }

@@ -1,13 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { Order, OrdersService } from './../..';
+import { Order, OrdersService, ActiveOrdersPipe } from './../..';
 import { User, UsersService } from './../../../users';
 import { Book, BooksService } from './../../../books';
 
 @Component({
   templateUrl: './orders-list.component.html',
-  styleUrls: ['./../../../shared/css/shared.css']
+  styleUrls: ['./../../../shared/css/shared.css'],
+  providers: [ActiveOrdersPipe]
 })
 export class OrdersListComponent implements OnInit, OnDestroy {
 
@@ -20,14 +21,15 @@ export class OrdersListComponent implements OnInit, OnDestroy {
   constructor(
     private ordersService: OrdersService,
     private usersService: UsersService,
-    private booksService: BooksService
+    private booksService: BooksService,
+    private activeOrdersPipe: ActiveOrdersPipe
   ) { }
 
   ngOnInit() {
     this.sub = this.ordersService.getAll()
       .subscribe(
          orders => {
-           orders = orders.filter(order => !order.isCompleted)
+           orders = this.activeOrdersPipe.transform(orders);
            let clientIds = orders.map(order => order.clientId);
            this.usersService.getAll(clientIds)
              .then(users => this.clients = users)

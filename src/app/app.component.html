@@ -1,7 +1,7 @@
 <!-- Comment out ClickStylerDirective declaration in SharedModule's 'exports' to turn off styling mechanism -->
 <h1 app-click-styler="green">{{appData ? appData.title : 'Unknown application'}}</h1>
 <button [routerLink]="['books']" routerLinkActive="active">Store</button>
-<button [routerLink]="['cart']" routerLinkActive="active">Cart: {{cartItemsCount}}</button>
+<button [routerLink]="['cart']" routerLinkActive="active">Cart: {{cartItemsCount | async}}</button>
 <button [routerLink]="['admin']" routerLinkActive="active">Admin</button>
 <button [routerLink]="['login']" routerLinkActive="active">Login</button>
 <button [routerLink]="['about']" routerLinkActive="active">About</button>

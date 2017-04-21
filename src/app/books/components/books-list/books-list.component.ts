@@ -2,14 +2,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { Book, BooksService } from './../..';
+import { Book, BooksService, AvailableBooksPipe } from './../..';
 
 @Component({
   templateUrl: './books-list.component.html',
   styleUrls: [
     './../../../shared/css/shared.css',
     './book-entry/book-entry.component.css'
-  ]
+  ],
+  providers: [AvailableBooksPipe]
 })
 export class BooksListComponent implements OnInit, OnDestroy {
 
@@ -21,7 +22,8 @@ export class BooksListComponent implements OnInit, OnDestroy {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private booksService: BooksService
+    private booksService: BooksService,
+    private availableBooksPipe: AvailableBooksPipe
   ) { }
 
   ngOnInit() {
@@ -35,7 +37,7 @@ export class BooksListComponent implements OnInit, OnDestroy {
         this.isAdminFeatureArea = !!data.isAdminFeatureArea
       });
     this.booksService.getAll()
-      .then(books => books.filter(book => this.isAdminFeatureArea || book.count > 0))
+      .then(books => this.isAdminFeatureArea ? books : this.availableBooksPipe.transform(books))
       .then(books => {
         this.books = books
           .sort((book1, book2) => {

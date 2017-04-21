@@ -30,7 +30,7 @@
         id="rating" name="rating"
         type="text"
         placeholder="Book rating"
-        value="{{book.averageRating()}}"
+        value="{{book | averageRating}}"
         readonly>
     <button type="button" (click)="clearRating()">Clear rating</button>
   </div>

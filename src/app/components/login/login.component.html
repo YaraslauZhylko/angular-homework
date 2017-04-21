@@ -11,8 +11,7 @@
       <option
           *ngFor="let user of users"
           [ngValue]="user.id">
-        {{user.fullName()}}
-        {{user.isAdmin ? '(admin)' : ''}}
+        {{user | fullName:true}}
       </option>
     </select>
   </div>

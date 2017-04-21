@@ -23,7 +23,7 @@
       </tr>
   </tbody>
 </table>
-<p>Total price: {{totalPrice}} BYN</p>
+<p>Total price: {{totalPrice | currency:'BYN':false:'1.2-2'}}</p>
 <p *ngIf="missingItems" class="critical">
   Some books are no longer available! Might have been deleted from DB?
 </p>

@@ -23,7 +23,7 @@ export class UsersService {
   getAll(ids?: Array<string>): Promise<Array<User>> {
     return this.http.get(this.url)
       .toPromise()
-      .then(response => response.json().map(user => User.fromJSON(user)))
+      .then(response => <Array<User>>response.json())
       .then(books => books.filter(user => !ids || ids.indexOf(user.id) >= 0))
       .catch(this.handleError);
   }
@@ -31,7 +31,7 @@ export class UsersService {
   get(id: string): Promise<User> {
     return this.http.get(`${this.url}/${id}`)
       .toPromise()
-      .then(response => User.fromJSON(response.json()))
+      .then(response => <User>response.json())
       .catch(this.handleError);
   }
 
@@ -45,7 +45,7 @@ export class UsersService {
     const body = JSON.stringify(user);
     return this.http[method](url, body, options)
       .toPromise()
-      .then(response => User.fromJSON(response.json()))
+      .then(response => <User>response.json())
       .catch(this.handleError);
   }
 

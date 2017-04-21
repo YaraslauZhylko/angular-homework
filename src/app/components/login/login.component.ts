@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { User, UsersService } from './../../users';
+import { User, UsersService, FullNamePipe } from './../../users';
 import { AuthService } from './../../services';
 
 @Component({
-  templateUrl: './login.component.html'
+  templateUrl: './login.component.html',
+  providers: [FullNamePipe]
 })
 export class LoginComponent implements OnInit, OnDestroy {
 
@@ -21,7 +22,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private usersService: UsersService,
-    private authService: AuthService
+    private authService: AuthService,
+    private fullNamePipe: FullNamePipe
   ) {
     this.setMessage();
   }
@@ -40,7 +42,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   setMessage() {
-    this.message = 'Logged ' + (this.authService.isLoggedIn() ? 'in as ' + this.authService.user.fullName() : 'out');
+    this.message = 'Logged ' + (this.authService.isLoggedIn() ? 'in as ' + this.fullNamePipe.transform(this.authService.user) : 'out');
   }
 
   login() {

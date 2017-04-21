@@ -1,7 +1,7 @@
-<h4>"{{book.title}}"</h4>
+<h4>{{book.title | title}}</h4>
 <p>Author: {{book.author}}</p>
 <p>
-  Rating: {{book.averageRating()}}
+  Rating: {{book | averageRating}}
   <button
       *ngFor="let rate of [1,2,3,4,5]"
       (click)="rateBook(rate)"
@@ -10,7 +10,7 @@
     {{rate}}
   </button>
 </p>
-<p>Price: {{book.price}} BYN</p>
+<p>Price: {{book.price | currency:'BYN':false:'1.2-2'}}</p>
 <p>Left in store: {{book.count}}</p>
 <p>
   <button (click)="back()">&lt; Back to list</button>

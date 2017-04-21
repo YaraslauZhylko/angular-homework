@@ -22,13 +22,13 @@ export class OrdersService {
 
   getAll(): Observable<Array<Order>> {
     return this.http.get(this.url)
-      .map(response => response.json().map(order => Order.fromJSON(order)))
+      .map(response => <Array<Order>>response.json())
       .catch(this.handleError);
   }
 
   get(id: string): Observable<Order> {
     return this.http.get(`${this.url}/${id}`)
-      .map(response => Order.fromJSON(response.json()))
+      .map(response => <Order>response.json())
       .catch(this.handleError);
   }
 
@@ -41,7 +41,7 @@ export class OrdersService {
      });
     const body = JSON.stringify(order);
     return this.http[method](url, body, options)
-      .map(response => Order.fromJSON(response.json()))
+      .map(response => <Order>response.json())
       .catch(this.handleError);
   }
 

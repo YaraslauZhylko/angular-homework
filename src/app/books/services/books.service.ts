@@ -23,7 +23,7 @@ export class BooksService {
   getAll(ids?: Array<string>): Promise<Array<Book>> {
     return this.http.get(this.url)
       .toPromise()
-      .then(response => response.json().map(book => Book.fromJSON(book)))
+      .then(response => <Array<Book>>response.json())
       .then(books => books.filter(book => !ids || ids.indexOf(book.id) >= 0))
       .catch(this.handleError);
   }
@@ -31,7 +31,7 @@ export class BooksService {
   get(id: string): Promise<Book> {
     return this.http.get(`${this.url}/${id}`)
       .toPromise()
-      .then(response => Book.fromJSON(response.json()))
+      .then(response => <Book>response.json())
       .catch(this.handleError);
   }
 
@@ -66,7 +66,7 @@ export class BooksService {
     const body = JSON.stringify(book);
     return this.http[method](url, body, options)
       .toPromise()
-      .then(response => Book.fromJSON(response.json()))
+      .then(response => <Book>response.json())
       .catch(this.handleError);
   }
 

@@ -1,6 +1,6 @@
-<td>{{client.fullName()}}</td>
+<td>{{client | fullName}}</td>
 <td>{{totalCount}}</td>
-<td>{{totalPrice}}</td>
+<td>{{totalPrice | currency:'BYN':false:'1.2-2'}}</td>
 <td>
     <span *ngIf="missingItems">[Missing order items]</span>
 </td>

@@ -1,6 +1,6 @@
 <div *ngIf="order">
-    <h4>Order: "{{order.id}}"</h4>
-    <p [ngClass]="{'critical': missingClient}">Client: {{client.fullName()}}</p>
+    <h4>Order #: {{order.id}}</h4>
+    <p [ngClass]="{'critical': missingClient}">Client: {{client | fullName}}</p>
     <p>Address: {{order.address}}</p>
     <app-order-items-list
         [orderItems]="order.items"

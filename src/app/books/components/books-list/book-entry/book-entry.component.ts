@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, HostBinding, HostListener } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { Book } from './../../..';
+import { Book, AverageRatingPipe } from './../../..';
 
 @Component({
   selector: '[app-book-entry]',
@@ -9,7 +9,8 @@ import { Book } from './../../..';
   styleUrls: [
     './../../../../shared/css/shared.css',
     './book-entry.component.css'
-  ]
+  ],
+  providers: [AverageRatingPipe]
 })
 export class BookEntryComponent implements OnInit {
 
@@ -37,12 +38,13 @@ export class BookEntryComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private averageRatingPipe: AverageRatingPipe
   ) { }
 
   ngOnInit() {
     if (!this.isAdminFeatureArea) {
-      let avgRating = this.book.averageRating();
+      let avgRating = this.averageRatingPipe.transform(this.book);
       this.highRating = avgRating >= 4.5;
       this.lowRating = avgRating <= 2.5;
     }
