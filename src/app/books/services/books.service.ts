@@ -1,54 +1,38 @@
 import { Injectable, Inject } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs';
 
+import { API_URL, UNIQUE_ID_8 } from './../../shared';
 import { Book } from './..';
-import { UNIQUE_ID_8, StorageService } from './../../shared';
 
 @Injectable()
 export class BooksService {
 
-  entityType: string = 'book';
+  private url: string;
 
   constructor(
+    @Inject(API_URL) private apiUrl: string,
     @Inject(UNIQUE_ID_8) private uniqueId: any,
-    private storage: StorageService
+    private http: Http
   ) {
-    this.preSeedIfRequired();
-  }
-
-  // Storage-related methods:
-
-  private preSeedIfRequired(): void {
-
-    let alreadyPopulated = this.storage.getAll(this.entityType).length > 0;
-
-    if (!alreadyPopulated) {
-      if (this.storage) alert("Initially pre-seeding localStorage with book data...");
-      this.save(new Book(null, "Жалейка", "Янка Купала", 10, 1, [4, 3, 4, 5]));
-      this.save(new Book(null, "Новая зямля", "Якуб Колас", 12, 3));
-      this.save(new Book(null, "Вянок", "Максім Багдановіч", 14.2, 5,  [4, 5, 4]));
-      this.save(new Book(null, "Ладдзя роспачы", "Уладзімір Караткевіч", 26.4, 2, [5, 4, 5]));
-      this.save(new Book(null, "Неруш", "Рыгор Барадулін", 5.56, 2));
-      this.save(new Book(null, "Знак Бяды", "Васіль Быкаў", 23.99, 5, [5, 5]));
-      this.save(new Book(null, "Першае чытаньне для дзетак беларусаў", "Цётка", 22.1, 4, [4, 3, 4, 5]));
-      this.save(new Book(null, "Песьня пра зубра", "Мікола Гусоўскі", 15.6, 2, [4, 3, 5, 5]));
-      this.save(new Book(null, "Пінская шляхта", "Вінцэнт Дунін-Марцінкевіч", 23.5, 6));
-      this.save(new Book(null, "Палескія рабінзоны", "Янка Маўр", 13, 1, [4, 5]));
-    }
+    this.url = `${this.apiUrl}/books`;
   }
 
   // PUBLIC METHODS:
 
   getAll(ids?: Array<string>): Promise<Array<Book>> {
-    return Promise.resolve(
-      this.storage.getAll(this.entityType)
-        .filter(book => !ids || ids.indexOf(book.id) >= 0)
-        .map(book => Book.fromJSON(book)));
+    return this.http.get(this.url)
+      .toPromise()
+      .then(response => response.json().map(book => Book.fromJSON(book)))
+      .then(books => books.filter(book => !ids || ids.indexOf(book.id) >= 0))
+      .catch(this.handleError);
   }
 
   get(id: string): Promise<Book> {
-    let book = this.storage.get(this.entityType, id);
-    if (book) return Promise.resolve(Book.fromJSON(book))
-    else return Promise.reject("Book not found.");
+    return this.http.get(`${this.url}/${id}`)
+      .toPromise()
+      .then(response => Book.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
   rate(id: string, rate: number): Promise<Book> {
@@ -57,7 +41,8 @@ export class BooksService {
         book.ratings.push(rate);
         return book;
       })
-      .then(book => { this.save(book); return book; })
+      .then(book => this.save(book))
+      .catch(this.handleError);
   }
 
   unrate(id: string, rate: number): Promise<Book> {
@@ -67,25 +52,33 @@ export class BooksService {
         if (lastIdx >= 0) book.ratings.splice(lastIdx, 1);
         return book;
       })
-      .then(book => { this.save(book); return book; })
+      .then(book => this.save(book))
+      .catch(this.handleError);
   }
 
-  save(book: Book): Promise<any> {
-
-    let saveBook = (book) => Promise.resolve(this.storage.set(this.entityType, book.id, book));
-    let bookNotFound = () => Promise.reject("This book has already been deleted.");
-
-    if (book.id) {
-      return this.get(book.id)
-        .then(() => saveBook(book))
-        .catch(() => bookNotFound());
-    } else {
-      book.id = this.uniqueId();
-      return saveBook(book);
-    }
+  save(book: Book): Promise<Book> {
+    const method = book.id ? 'put' : 'post';
+    const url = book.id ? `${this.url}/${book.id}` : `${this.url}`;
+    book.id = book.id ? book.id : this.uniqueId();
+    const options = new RequestOptions({
+      headers: new Headers({'Content-Type': 'application/json'})
+     });
+    const body = JSON.stringify(book);
+    return this.http[method](url, body, options)
+      .toPromise()
+      .then(response => Book.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
   delete(id: string): Promise<any> {
-    return Promise.resolve(this.storage.remove(this.entityType, id));
+    return this.http.delete(`${this.url}/${id}`)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleError);
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred:', error);
+    return Promise.reject("Book(s) not found.");
   }
 }

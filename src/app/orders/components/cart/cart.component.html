@@ -3,7 +3,7 @@
 </h3>
 <h4>Your cart</h4>
 <app-order-items-list
-    *ngIf="cartItems.length"
+    *ngIf="cartItems && cartItems.length"
     [orderItems]="cartItems"
     [books]="books"
     [isCart]="true"

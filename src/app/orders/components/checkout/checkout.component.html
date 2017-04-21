@@ -1,11 +1,11 @@
 <h4>Checkout Information</h4>
-<form #orderForm="ngForm" *ngIf="orderData" (ngSubmit)="createOrder()">
+<form #orderForm="ngForm" *ngIf="order" (ngSubmit)="createOrder()">
   <div>
     <label for="clientName">Name</label>
     <input
         id="clientName" name="clientName"
         type="text" readonly
-        value="{{orderData.client.fullName()}}">
+        value="{{client.fullName()}}">
   </div>
   <div>
     <label for="address">Address</label>
@@ -13,7 +13,7 @@
         id="address" name="address"
         type="text" required
         placeholder="Shipment address"
-        [(ngModel)]="orderData.order.address">
+        [(ngModel)]="order.address">
   </div>
   <p></p>
   <button type="submit" [disabled]="!orderForm.form.valid">Submit order</button>

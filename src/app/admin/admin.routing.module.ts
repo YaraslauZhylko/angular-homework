@@ -5,7 +5,7 @@ import { AdminAuthGuard, CanDeactivateGuard } from './../guards';
 import { AdminComponent, IsAdminFeatureAreaResolveGuard } from '.';
 import { BooksListComponent, BookEditComponent, BookResolveGuard } from './../books';
 import { UsersListComponent, UserEditComponent, UserResolveGuard } from './../users';
-import { OrdersListComponent, OrderDetailsComponent, OrdersResolveGuard, OrderResolveGuard } from './../orders';
+import { OrdersListComponent, OrderDetailsComponent } from './../orders';
 
 const adminRoutes: Routes = [
   {
@@ -26,17 +26,11 @@ const adminRoutes: Routes = [
         children: [
           {
             path: '',
-            component: OrdersListComponent,
-            resolve: {
-              ordersData: OrdersResolveGuard
-            }
+            component: OrdersListComponent
           },
           {
             path: ':id',
-            component: OrderDetailsComponent,
-            resolve: {
-              orderData: OrderResolveGuard
-            }
+            component: OrderDetailsComponent
           }
         ]
       },

@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard, CanDeactivateGuard } from './../guards';
 
 import { BooksListComponent, BookDetailsComponent, BookResolveGuard } from './../books';
-import { CartComponent, CheckoutComponent, CheckoutResolveGuard } from './../orders';
+import { CartComponent, CheckoutComponent } from './../orders';
 
 
 const StoreRoutes: Routes = [
@@ -43,10 +43,7 @@ const StoreRoutes: Routes = [
             path: 'checkout',
             component: CheckoutComponent,
             canActivate: [AuthGuard],
-            canDeactivate: [CanDeactivateGuard],
-            resolve: {
-              orderData: CheckoutResolveGuard
-            }
+            canDeactivate: [CanDeactivateGuard]
           }
         ]
       }

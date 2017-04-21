@@ -1,0 +1,22 @@
+{
+    "books": [
+        {"id": "jdi8H3r", "title": "Жалейка", "author": "Янка Купала", "price": 10, "count": 1, "ratings": [4, 3, 4, 5]},
+        {"id": "9Ihsqw32", "title": "Новая зямля", "author": "Якуб Колас", "price": 12, "count": 3, "ratings": []},
+        {"id": "TgsblobS", "title": "Вянок", "author": "Максім Багдановіч", "price": 14.2, "count": 5, "ratings":  [4, 5, 4]},
+        {"id": "fms529Gs", "title": "Ладдзя роспачы", "author": "Уладзімір Караткевіч", "price": 26.4, "count": 2, "ratings": [5, 4, 5]},
+        {"id": "hwa65d34", "title": "Неруш", "author": "Рыгор Барадулін", "price": 5.56, "count": 2, "ratings": []},
+        {"id": "9k9kj6f3", "title": "Знак Бяды", "author": "Васіль Быкаў", "price": 23.99, "count": 5, "ratings": [5, 5]},
+        {"id": "09hvs57h", "title": "Першае чытаньне для дзетак беларусаў", "author": "Цётка", "price": 22.1, "count": 4, "ratings": [4, 3, 4, 5]},
+        {"id": "22fsbk7d", "title": "Песьня пра зубра", "author": "Мікола Гусоўскі", "price": 15.6, "count": 2, "ratings": [4, 3, 5, 5]},
+        {"id": "8765gf54", "title": "Пінская шляхта", "author": "Вінцэнт Дунін-Марцінкевіч", "price": 23.5, "count": 6, "ratings": []},
+        {"id": "sskub45f", "title": "Палескія рабінзоны", "author": "Янка Маўр", "price": 13, "count": 1, "ratings": [4, 5]}
+    ],
+
+    "users": [
+        {"id": "Xhg5gSt2", "firstName": "Зьміцер", "lastName": "Васілевіч", "isAdmin": true},
+        {"id": "9D3h72gI", "firstName": "Ян", "lastName": "Красоўскі", "isAdmin": false}
+    ],
+
+    "orders": [
+    ]
+}

@@ -10,12 +10,12 @@
   <tbody>
       <tr
           app-order-entry
-          *ngFor="let order of ordersData.orders"
+          *ngFor="let order of orders"
           [order]="order"
-          [clients]="ordersData.clients"
-          [books]="ordersData.books">
+          [clients]="clients"
+          [books]="books">
       </tr>
-      <tr *ngIf="!ordersData.orders.length">
+      <tr *ngIf="!orders || !orders.length">
         <td colspan="4">
           <em>No active orders</em>
         </td>

@@ -1,46 +1,63 @@
 import { Injectable, Inject } from '@angular/core';
+import { Http, Headers, Response, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs';
 
-import { UNIQUE_ID_16, StorageService } from './../../shared';
-import { Order, OrderItem } from './..';
+import { API_URL, UNIQUE_ID_16 } from './../../shared';
+import { Order } from './..';
 
 @Injectable()
 export class OrdersService {
 
-  entityType: string = 'order';
+  private url: string;
 
   constructor(
+    @Inject(API_URL) private apiUrl: string,
     @Inject(UNIQUE_ID_16) private uniqueId: any,
-    private storage: StorageService
-  ) { }
+    private http: Http
+  ) {
+    this.url = `${this.apiUrl}/orders`;
+  }
 
   // PUBLIC METHODS:
 
-  getAll() {
-    return Promise.resolve(this.storage.getAll(this.entityType).map(order => Order.fromJSON(order)));
+  getAll(): Observable<Array<Order>> {
+    return this.http.get(this.url)
+      .map(response => response.json().map(order => Order.fromJSON(order)))
+      .catch(this.handleError);
   }
 
-  get(id: string) {
-    let order = this.storage.get(this.entityType, id);
-    if (order) return Promise.resolve(Order.fromJSON(order))
-    else return Promise.reject("Order not found.");
+  get(id: string): Observable<Order> {
+    return this.http.get(`${this.url}/${id}`)
+      .map(response => Order.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
-  save(order: Order) {
-
-    let saveOrder = (order) => Promise.resolve(this.storage.set(this.entityType, order.id, order));
-    let orderNotFound = () => Promise.reject("This order has already been deleted.");
-
-    if (order.id) {
-      return this.get(order.id)
-        .then(() => saveOrder(order))
-        .catch(() => orderNotFound());
-    } else {
-      order.id = this.uniqueId();
-      return saveOrder(order);
-    }
+  save(order: Order): Observable<Order> {
+    const method = order.id ? 'put' : 'post';
+    const url = order.id ? `${this.url}/${order.id}` : `${this.url}`;
+    order.id = order.id ? order.id : this.uniqueId();
+    const options = new RequestOptions({
+      headers: new Headers({'Content-Type': 'application/json'})
+     });
+    const body = JSON.stringify(order);
+    return this.http[method](url, body, options)
+      .map(response => Order.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
   delete(id: string) {
-    return Promise.resolve(this.storage.remove(this.entityType, id));
+    return this.http.delete(`${this.url}/${id}`)
+      .map(response => response.json())
+      .catch(this.handleError);
+  }
+
+  private handleError(error: any) {
+    let errorMessage = (error.message)
+      ? error.message
+      : error.status
+        ? `${error.status} - ${error.statusText}`
+        : 'Server error';
+    console.error(errorMessage);
+    return Observable.throw("Order(s) not found.");
   }
 }

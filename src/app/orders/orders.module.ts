@@ -9,16 +9,13 @@ import { UsersModule } from './../users';
 import {
   OrdersService,
   CartService,
-  OrderResolveGuard,
-  OrdersResolveGuard,
   OrderItemEntryComponent,
   OrderItemsListComponent,
   OrderDetailsComponent,
   OrderEntryComponent,
   OrdersListComponent,
   CartComponent,
-  CheckoutComponent,
-  CheckoutResolveGuard
+  CheckoutComponent
 } from '.';
 
 @NgModule({
@@ -40,10 +37,7 @@ import {
   ],
   providers: [
     OrdersService,
-    CartService,
-    OrderResolveGuard,
-    OrdersResolveGuard,
-    CheckoutResolveGuard
+    CartService
   ]
 })
 export class OrdersModule { }

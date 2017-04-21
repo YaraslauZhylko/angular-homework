@@ -1,11 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-// import { HttpModule } from '@angular/http';
 import { APP_BASE_HREF } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { HttpModule } from '@angular/http';
 
-import { SharedModule } from './shared';
+import { SharedModule, API_URL } from './shared';
 import { UsersModule } from './users';
 
 import { AppComponent } from './app.component';
@@ -17,8 +17,6 @@ import { StoreModule } from './store';
 
 import { AppRoutingModule, RouterComponents } from './app.routing.module';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -27,8 +25,8 @@ import { AppRoutingModule, RouterComponents } from './app.routing.module';
   imports: [
     BrowserModule,
     FormsModule,
-    // HttpModule,  // Not used yet
     RouterModule,
+    HttpModule,
     SharedModule,
     UsersModule,
     OrdersModule,
@@ -37,6 +35,7 @@ import { AppRoutingModule, RouterComponents } from './app.routing.module';
   ],
   providers: [
     {provide: APP_BASE_HREF, useValue: '/'},
+    {provide: API_URL, useValue: 'http://localhost:3000'},
     AuthService,
     AuthGuard,
     AdminAuthGuard,

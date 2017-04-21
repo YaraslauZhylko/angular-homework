@@ -1,64 +1,63 @@
 import { Injectable, Inject } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
+import { Observable } from 'rxjs';
 
-import { UNIQUE_ID_8, StorageService } from './../../shared';
+import { API_URL, UNIQUE_ID_8 } from './../../shared';
 import { User } from './..';
 
 @Injectable()
 export class UsersService {
 
-  entityType: string = 'user';
+  private url: string;
 
   constructor(
+    @Inject(API_URL) private apiUrl: string,
     @Inject(UNIQUE_ID_8) private uniqueId: any,
-    private storage: StorageService
+    private http: Http
   ) {
-    this.preSeedIfRequired();
-  }
-
-  // Storage-related methods:
-
-  private preSeedIfRequired(): void {
-
-    let alreadyPopulated = this.storage.getAll(this.entityType).length > 0;
-
-    if (!alreadyPopulated) {
-      if (this.storage) alert("Initially pre-seeding localStorage with user data...");
-      this.save(new User(null, "Зьміцер", "Красоўскі", true));
-      this.save(new User(null, "Ян", "Васілевіч"));
-    }
+    this.url = `${this.apiUrl}/users`;
   }
 
   // PUBLIC METHODS:
 
   getAll(ids?: Array<string>): Promise<Array<User>> {
-    return Promise.resolve(
-      this.storage.getAll(this.entityType)
-        .filter(user => !ids || ids.indexOf(user.id) >= 0)
-        .map(user => User.fromJSON(user)));
+    return this.http.get(this.url)
+      .toPromise()
+      .then(response => response.json().map(user => User.fromJSON(user)))
+      .then(books => books.filter(user => !ids || ids.indexOf(user.id) >= 0))
+      .catch(this.handleError);
   }
 
   get(id: string): Promise<User> {
-    let user = this.storage.get(this.entityType, id);
-    if (user) return Promise.resolve(User.fromJSON(user))
-    else return Promise.reject("User not found.");
+    return this.http.get(`${this.url}/${id}`)
+      .toPromise()
+      .then(response => User.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
-  save(user: User): Promise<any> {
-
-    let saveUser = (user) => Promise.resolve(this.storage.set(this.entityType, user.id, user));
-    let userNotFound = () => Promise.reject("This user has already been deleted.");
-
-    if (user.id) {
-      return this.get(user.id)
-        .then(() => saveUser(user))
-        .catch(() => userNotFound());
-    } else {
-      user.id = this.uniqueId();
-      return saveUser(user);
-    }
+  save(user: User): Promise<User> {
+    const method = user.id ? 'put' : 'post';
+    const url = user.id ? `${this.url}/${user.id}` : `${this.url}`;
+    user.id = user.id ? user.id : this.uniqueId();
+    const options = new RequestOptions({
+      headers: new Headers({'Content-Type': 'application/json'})
+     });
+    const body = JSON.stringify(user);
+    return this.http[method](url, body, options)
+      .toPromise()
+      .then(response => User.fromJSON(response.json()))
+      .catch(this.handleError);
   }
 
   delete(id: string): Promise<any> {
-    return Promise.resolve(this.storage.remove(this.entityType, id));
+    return this.http.delete(`${this.url}/${id}`)
+      .toPromise()
+      .then(response => response.json())
+      .catch(this.handleError);
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('An error occurred:', error);
+    return Promise.reject("User(s) not found.");
   }
 }

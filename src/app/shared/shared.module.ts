@@ -1,12 +1,11 @@
 import { NgModule, OpaqueToken } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AppData, UniqueID, StorageService } from './';
+import { API_URL } from './';
+import { APP_DATA, AppData } from './';
+import { UNIQUE_ID_8, UNIQUE_ID_16, UniqueID } from './';
+import { StorageService } from './';
 import { ClickStylerDirective } from './';
-
-export const APP_DATA = new OpaqueToken('AppData');
-export const UNIQUE_ID_8 = new OpaqueToken('UniqueID');
-export const UNIQUE_ID_16 = new OpaqueToken('UniqueID');
 
 @NgModule({
   imports: [
